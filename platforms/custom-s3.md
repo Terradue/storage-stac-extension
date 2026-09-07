@@ -17,7 +17,6 @@ support for the complete AWS S3 management API or identical lifecycle semantics.
 | --- | --- |
 | `managed_by: application` | Use the endpoint's documented object, copy, restore, tier, and delete operations. |
 | `managed_by: provider` | Allowed only when the endpoint explicitly documents compatible lifecycle-policy operations. |
-| `manual` trigger | Application only. |
 | `datetime` trigger | Provider-specific; application-managed by default. |
 | `age` trigger | Use the [`aws-s3` mapping](aws-s3.md) only when the provider explicitly guarantees the same clock, unit, filtering, and execution semantics. |
 | `transition` action | Use `storage_class` as the provider-defined target class when the provider supports it; otherwise use an application-managed copy or move. |

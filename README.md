@@ -121,17 +121,17 @@ Storage Scheme Object in the same `storage:schemes` map.
 | Field Name | Type | Description |
 | ---------- | ---- | ----------- |
 | managed_by | string | The entity expected to evaluate and execute the rules: `provider` or `application`. |
-| rules | \[[Storage Lifecycle Rule Object](#storage-lifecycle-rule-object)\] | **REQUIRED.** One or more lifecycle rules. |
+| rules | Map<string, [Storage Lifecycle Rule Object](#storage-lifecycle-rule-object)> | **REQUIRED.** One or more lifecycle rules keyed by their identifiers. |
 
 `managed_by` communicates operational responsibility; it does not change the meaning of a rule. For example, use `application` when an
 application evaluates per-Asset timestamps that a storage provider cannot evaluate directly.
 
 #### Storage Lifecycle Rule Object
 
+Each rule is identified by its key in the containing `rules` map. Rule objects contain only `trigger` and `action`.
+
 | Field Name | Type | Description |
 | ---------- | ---- | ----------- |
-| id | string | **REQUIRED.** Identifier that is unique within the containing Storage Lifecycle Object. |
-| title | string | A human-readable title for the rule. |
 | trigger | [Storage Lifecycle Trigger Object](#storage-lifecycle-trigger-object) | **REQUIRED.** The condition that makes the action eligible. |
 | action | [Storage Lifecycle Action Object](#storage-lifecycle-action-object) | **REQUIRED.** The operation to perform when the trigger is eligible. |
 
@@ -141,7 +141,6 @@ Exactly one of the following trigger forms is used:
 
 | `type` | Additional fields | Description |
 | ------ | ----------------- | ----------- |
-| `manual` | none | Makes the action eligible through an out-of-band manual decision. |
 | `datetime` | `at` (string) | Makes the action eligible at the RFC 3339 timestamp identified by `at`. |
 | `age` | `from` (string), `after` (string) | Makes the action eligible after an ISO 8601 duration has elapsed from the referenced timestamp. |
 
@@ -171,9 +170,8 @@ This example transitions an Asset from a hot scheme to a cold scheme when the As
       "region": "eu-central-1",
       "lifecycle": {
         "managed_by": "application",
-        "rules": [
-          {
-            "id": "archive-after-hot-retention",
+        "rules": {
+          "archive-after-hot-retention": {
             "trigger": {
               "type": "datetime",
               "at": "/assets/result/expires"
@@ -183,7 +181,7 @@ This example transitions an Asset from a hot scheme to a cold scheme when the As
               "target": "cold"
             }
           }
-        ]
+        }
       }
     },
     "cold": {
@@ -196,13 +194,12 @@ This example transitions an Asset from a hot scheme to a cold scheme when the As
 }
 ```
 
-Age-based and manual triggers can be expressed independently of any provider:
+Age-based triggers can be expressed independently of any provider:
 
 ```json
 {
-  "rules": [
-    {
-      "id": "archive-after-30-days",
+  "rules": {
+    "archive-after-30-days": {
       "trigger": {
         "type": "age",
         "from": "/properties/created",
@@ -212,17 +209,8 @@ Age-based and manual triggers can be expressed independently of any provider:
         "type": "transition",
         "target": "cold"
       }
-    },
-    {
-      "id": "expire-on-approval",
-      "trigger": {
-        "type": "manual"
-      },
-      "action": {
-        "type": "expire"
-      }
     }
-  ]
+  }
 }
 ```
 

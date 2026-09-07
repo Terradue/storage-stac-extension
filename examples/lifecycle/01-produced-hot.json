@@ -22,20 +22,19 @@
         "storage_class": "STANDARD",
         "lifecycle": {
           "managed_by": "application",
-          "rules": [
-            {
-              "id": "archive-after-hot-retention",
-              "title": "Move to cold storage",
+          "rules": {
+            "archive": {
               "trigger": {
-                "type": "datetime",
-                "at": "/assets/result/expires"
+                "type": "age",
+                "from": "/properties/updated",
+                "after": "P30D"
               },
               "action": {
                 "type": "transition",
                 "target": "cold"
               }
             }
-          ]
+          }
         }
       },
       "cold": {
@@ -43,7 +42,19 @@
         "platform": "https://{bucket}.s3.{region}.amazonaws.com",
         "bucket": "processing-results",
         "region": "eu-central-1",
-        "storage_class": "DEEP_ARCHIVE"
+        "storage_class": "DEEP_ARCHIVE",
+        "lifecycle": {
+          "managed_by": "application",
+          "rules": {
+            "expire": {
+              "trigger": {
+                "type": "datetime",
+                "at": "/properties/expires"
+              },
+              "action": { "type": "expire" }
+            }
+          }
+        }
       }
     }
   },

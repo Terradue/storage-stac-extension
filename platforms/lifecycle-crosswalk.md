@@ -33,7 +33,6 @@ provider timestamps require semantic validation.
 | Current class or tier | `storage_class` | `storage_class` | `storage_class` |
 | `managed_by: application` | AWS object APIs | Provider-specific S3-compatible APIs | Azure Blob APIs |
 | `managed_by: provider` | S3 Lifecycle configuration when exactly representable | Only when the endpoint explicitly documents compatible lifecycle operations | Azure lifecycle management policy when exactly representable |
-| `manual` trigger | Application only | Application only | Application only |
 | `datetime` trigger | S3 `Date` in the restricted cases below; otherwise application | Provider-specific; application by default | Application only |
 | `age` trigger | S3 `Days` only when based on S3 object creation and expressed as integral days | AWS mapping only when explicitly supported; otherwise application | `daysAfterModificationGreaterThan` for base blobs when timestamps are equivalent and the duration is integral days |
 | `transition` action | S3 `Transition`; archive restoration requires application logic | Provider-specific; application by default | `tierToCool`, `tierToCold`, or `tierToArchive`; rehydration requires application logic |

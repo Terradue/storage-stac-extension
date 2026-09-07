@@ -23,7 +23,6 @@ e.g. using the AWS CLI parameter `--no-sign-request`.
 | Generic construct | AWS S3 mapping | Conditions |
 | --- | --- | --- |
 | Source and target tier | Source and target `storage_class` | The target scheme must identify an AWS class supported by the bucket. |
-| `manual` trigger | Application-managed `CopyObject`, `RestoreObject`, or `DeleteObject` workflow | S3 Lifecycle has no manual trigger. |
 | `datetime` + `transition` | Lifecycle `Transition.Date` | The resolved value must be usable as one rule date; AWS evaluates dates at midnight UTC. Directory buckets do not support date-based lifecycle transitions. |
 | `datetime` + `expire` | Lifecycle `Expiration.Date` | Same scoping and midnight-UTC constraints; directory buckets do not support date-based expiration. |
 | `age` + `transition` | Lifecycle `Transition.Days` | `from` must identify a timestamp guaranteed to equal S3 object creation, and `after` must be an exact positive number of days. |

@@ -169,10 +169,12 @@
         },
         "rules": {
           "title": "Lifecycle rules",
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/definitions/lifecycle_rule"
+          "type": "object",
+          "minProperties": 1,
+          "patternProperties": {
+              "^.{1,}$": {
+              "$ref": "#/definitions/lifecycle_rule"
+            }
           }
         }
       },
@@ -182,21 +184,10 @@
       "title": "Storage Lifecycle Rule Object",
       "type": "object",
       "required": [
-        "id",
         "trigger",
         "action"
       ],
       "properties": {
-        "id": {
-          "title": "Rule identifier",
-          "description": "An identifier that is unique within the containing Lifecycle Object.",
-          "type": "string",
-          "minLength": 1
-        },
-        "title": {
-          "title": "Rule title",
-          "type": "string"
-        },
         "trigger": {
           "$ref": "#/definitions/lifecycle_trigger"
         },
@@ -211,28 +202,12 @@
       "description": "The condition that makes a lifecycle action eligible.",
       "oneOf": [
         {
-          "$ref": "#/definitions/manual_trigger"
-        },
-        {
           "$ref": "#/definitions/datetime_trigger"
         },
         {
           "$ref": "#/definitions/age_trigger"
         }
       ]
-    },
-    "manual_trigger": {
-      "title": "Manual Trigger Object",
-      "type": "object",
-      "required": [
-        "type"
-      ],
-      "properties": {
-        "type": {
-          "const": "manual"
-        }
-      },
-      "additionalProperties": false
     },
     "datetime_trigger": {
       "title": "Datetime Trigger Object",
